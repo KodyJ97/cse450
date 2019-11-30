@@ -1,0 +1,85 @@
+American Airlines total 7 one way flights and 6 multi-stop flight - done
+
+American Airlines one-way flights
+292 12:30 AM LAX 9:00 AM JFK 32B
+118 7:00 AM LAX 3:00 PM JFK 32B
+2 8:00 AM LAX 4:00 PM JFK 32B
+238 10:00 AM LAX 6:00 PM JFK 32B
+4 11:00 AM LAX 7:00 PM JFK 32B
+274 12:00 PM LAX 8:00 PM JFK 32B
+32 2:00 PM LAX 10:00 PM JFK 32B
+
+American Airlines multistop flights
+2027 6:00 AM LAX 8:00 AM PHX 321
+2339 10:50 AM PHX 5:00 PM JFK 738
+
+2027 6:00 AM LAX 8:00 AM PHX 321
+2768 12:00 PM PHX 7:00 PM JFK 321
+
+1662 7:00 AM LAX 10:00 AM PHX 321
+2339 11:00 AM PHX 5:00 PM JFK 738
+
+1662 7:00 AM LAX 10:00 AM PHX 321
+2768 12:18 PM PHX 7:00 PM JFK 321
+
+1662 7:00 AM LAX 10:00 AM PHX 321
+2434 2:00 PM PHX 8:00 PM JFK 321
+
+1702 10:00 AM LAX 1:00 PM PHX 321
+2434 2:00 PM PHX 8:00 PM JFK 321
+
+Delta Airlines total 6 one way flights and 10 multistop flights - done
+
+Delta one-way flights
+DL1436 6:00am 2:00pm
+DL1258 8:00am 4:00pm
+DL2164 9:00am 6:00pm
+DL2787 11:00am 8:00pm
+DL0468 1:00pm 9:00pm
+DL2262 2:00pm 11:00pm
+
+United multi-stop Flights
+DL1587 6:00am 9:00 am
+SEA
+DL0182 12:00am 8:00pm
+
+DL1008 6:00am 1:00pm
+ATL
+DL1869 3:00pm 6:00pm
+
+DL1008 6:15am 1:00pm
+ATL
+DL0244 5:00pm 7:00pm
+
+DL0284 8:00 am 3:00pm
+ATL
+DL0244 5:00pm 7:00pm
+
+DL1287 8:00 am 11:00am
+SEA
+DL0182 12:00pm 8:00pm
+
+DL1954 9:00am 4:00pm
+ATL
+DL0244 5:00pm 7:00pm
+
+DL1954 9:00am 4:00pm
+ATL
+DL0214 7:00pm 10:00pm
+
+DL1530 10:30am 6:00pm
+ATL
+DL0214 7:00pm 10:00pm
+
+DL1530 10:30am 6:00pm
+ATL
+DL1888 10:00pm 11:56pm ----- Just in time cant round this value tho.
+
+DL1110 12:00pm 7:00pm
+ATL
+DL1888 10:00pm 11:56pm --------same
+
+United Airlines total 1 one way flights and 2 multistop flights
+
+
+
