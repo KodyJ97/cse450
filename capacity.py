@@ -7,61 +7,30 @@
 
 from sys import exit
 from collections import deque
-from datetime import timedelta, time
+from datetime import time
 
 # Data File
 FILE = '/home/kody/myrepos/cse450/450_data.txt'
 
-# Plane Capacities
-A220 = 105
-A319 = 128
-A320 = 150
-A321 = 185
-A321neo = 196
-A330_200 = 230
-A330_300 = 290
-A330_900neo = 280
-A350_900 = 300
-B717_200 = 110
-B737_700 = 126
-B737_800 = 165
-B737_900 = 180
-B737_900ER = 180
-B737_Max9 = 180
-B757_200 = 180
-B757_300 = 230
-B767_300 = 200
-B767_300ER = 225
-B767_400ER = 240
-B777_200 = 270
-B777_200ER = 270
-B777_200LR = 280
-B777_300 = 300
-B787_8 = 235
-B787_9 = 280
-Embraer170 = 72
-Embraer175_E75 = 78
-Embraer190 = 100
-McDonnellDouglasMD_88 = 150
-McDonnellDouglasMD_90_30 = 150
-CRJ700 = 75
-CRJ900 = 75
-
-
 # Node
 class Node:
 
-    def __init__(self, airline, start, end, arrival, departure, aircraft):
+    def __init__(self, airline, start, end, departure, arrival, aircraft):
         self.airline = airline
         self.start = start
         self.end = end
-        self.arrival = arrival
         self.departure = departure
+        self.arrival = arrival
         self.aircraft = aircraft
-
 
 class Graph:
 
+    # Print flight info - helper function not part of actual project.
+    @staticmethod
+    def print_flight(flight):
+        print("Airline:", flight.airline, "Start:", flight.start, "End:", flight.end, "Departure:", flight.departure, "Arrival:", flight.arrival,  "Aircraft Capacity:", flight.aircraft)
+
+    # Round the times - There is an error in here with times at 12:30 to 12:59 being rounded to 13 ---------------------
     @staticmethod
     def round_time(t):
         # convert to datetime.time object
@@ -72,6 +41,7 @@ class Graph:
         else:
             return t.replace(minute=0)
 
+    # Convert aircraft type to corresponding capacity.
     @staticmethod
     def aircraft_to_capacity(aircraft):
         if aircraft == 'A220':
@@ -118,74 +88,33 @@ class Graph:
             aircraft = 78
         return aircraft
 
+    # Analyze all flights that end in JFK because these are all our valid flights that we want.
+    @staticmethod
+    def valid_flight(flights):
+        flights_JFK = []
+        for flight in flights:
+            if flight.end == 'JFK':
+                flights_JFK.append(flight)
+        return flights_JFK
+
+    # Read, parse, and store data.
     def read_input_file(self):
         f = open(FILE)
         new_node = Node
         nodeList = []
+        # Parse the file using the ':' delimiter
         for line in f:
             split1 = line.split(':')
             new_node.airline = split1[0]
             new_node.start = split1[1]
             new_node.end = split1[2]
-            new_node.arrival = self.round_time(split1[3])
-            new_node.departure = self.round_time(split1[4])
+            new_node.departure = str(self.round_time(split1[3])) + split1[3][4:5] + 'M'
+            new_node.arrival = str(self.round_time(split1[4])) + split1[4][4:5] + 'M'
             new_node.aircraft = self.aircraft_to_capacity(split1[5].strip())
-            #print("Airline", new_node.airline, "Start:", new_node.start, "End:", new_node.end, "Arrival:", new_node.arrival,
-            #      "Departure:", new_node.departure, "Aircraft:", new_node.aircraft)
-            nodeList.append(new_node)
-
+            # Create a node and add it to our node list
+            nodeList.append(Node(new_node.airline, new_node.start, new_node.end, new_node.departure, new_node.arrival, new_node.aircraft))
+        f.close()
         return nodeList
-
-    # So this is Breadth-First-Search or BFS that will return true if a path exists from the s to t.
-    def BFS(self, s, t, parent):
-        visited = [False] * self.ROW
-        queue = deque()
-        queue.append(s)
-        visited[s] = True
-
-        while queue:
-
-            # Remove left most vertex
-            u = queue.popleft()
-            print("Vertex Removed", u)
-
-            # Retrieve all adjacent vertices and if a adjacent vertex has not been visited we will make it visited
-            # then enqueue it.
-            for ind, val in enumerate(self.graph[u]):
-                if visited[ind] is False and val > 0:
-                    queue.append(ind)
-                    visited[ind] = True
-                    parent[ind] = u
-
-        return True if visited[t] else False
-
-    # Sources for this algorithm are wikipedia, geeksforgeeks, and lessons in class.
-    def maximum_Flow(self, source, sink):
-        # Parent array will be filled in the BFS and is storing the path.
-        parent = [-1] * self.ROW
-        # max flow initialized to zero
-        max_flow = 0
-
-        # While there is a path from s to t on graph_c keep going.
-        while self.BFS(source, sink, parent):
-
-            # path_flow is an unbounded upper value for comparisons..
-            path_flow = float("Inf")
-            s = sink
-            while s != source:
-                path_flow = min(path_flow, self.graph[parent[s]][s])
-                s = parent[s]
-
-            max_flow += path_flow
-
-            v = sink
-            while v != source:
-                u = parent[v]
-                self.graph[u][v] -= path_flow
-                self.graph[v][u] += path_flow
-                v = parent[v]
-
-        return max_flow
 
 
 if __name__ == '__main__':
@@ -209,9 +138,8 @@ if __name__ == '__main__':
     # DL-Delta
     # UA-United
     graphMNG = Graph()
-    test = graphMNG.read_input_file()
-    source_ = 0
-    sink_ = 654
-
-    # print("The maximum capacity is", g.maximum_Flow(source_, sink_))
+    # List of flight nodes
+    flight_list = graphMNG.read_input_file()
+    # List of valid flights (end at JFK)
+    valid_flights = graphMNG.valid_flight(flight_list)
     exit(0)
