@@ -7,6 +7,7 @@
 
 from sys import exit
 from collections import deque
+from datetime import timedelta, time
 
 # Data File
 FILE = '/home/kody/myrepos/cse450/450_data.txt'
@@ -46,20 +47,98 @@ McDonnellDouglasMD_90_30 = 150
 CRJ700 = 75
 CRJ900 = 75
 
+
+# Node
+class Node:
+
+    def __init__(self, airline, start, end, arrival, departure, aircraft):
+        self.airline = airline
+        self.start = start
+        self.end = end
+        self.arrival = arrival
+        self.departure = departure
+        self.aircraft = aircraft
+
+
 class Graph:
 
-    def __init__(self, graph):
-        self.graph = graph
-        self.ROW = len(graph)
+    @staticmethod
+    def round_time(t):
+        # convert to datetime.time object
+        t = time(hour=int(t[0:2]), minute=int(t[2:4]))
+        # round to nearest hour
+        if t.minute >= 30:
+            return t.replace(minute=0, hour=t.hour+1)
+        else:
+            return t.replace(minute=0)
 
     @staticmethod
-    def read_input_file():
+    def aircraft_to_capacity(aircraft):
+        if aircraft == 'A220':
+            aircraft = 105
+        elif aircraft == 'A319':
+            aircraft = 128
+        elif aircraft == 'A320':
+            aircraft = 150
+        elif aircraft == 'A321':
+            aircraft = 185
+        elif aircraft == '717200':
+            aircraft = 110
+        elif aircraft == '737700':
+            aircraft = 126
+        elif aircraft == '737800':
+            aircraft = 165
+        elif aircraft == '737900':
+            aircraft = 180
+        elif aircraft == '757200':
+            aircraft = 180
+        elif aircraft == '757300':
+            aircraft = 230
+        elif aircraft == '767300':
+            aircraft = 200
+        elif aircraft == '777200':
+            aircraft = 270
+        elif aircraft == '777200LR':
+            aircraft = 280
+        elif aircraft == '787800':
+            aircraft = 235
+        elif aircraft == 'E170':
+            aircraft = 72
+        elif aircraft == 'E175':
+            aircraft = 78
+        elif aircraft == 'MD88':
+            aircraft = 150
+        elif aircraft == 'MD90':
+            aircraft = 150
+        elif aircraft == 'RJ700':
+            aircraft = 75
+        elif aircraft == 'RJ900':
+            aircraft = 75
+        elif aircraft == 'RJ175':
+            aircraft = 78
+        return aircraft
+
+    def read_input_file(self):
         f = open(FILE)
-        return 1
+        new_node = Node
+        nodeList = []
+        for line in f:
+            split1 = line.split(':')
+            new_node.airline = split1[0]
+            new_node.start = split1[1]
+            new_node.end = split1[2]
+            new_node.arrival = self.round_time(split1[3])
+            new_node.departure = self.round_time(split1[4])
+            new_node.aircraft = self.aircraft_to_capacity(split1[5].strip())
+            #print("Airline", new_node.airline, "Start:", new_node.start, "End:", new_node.end, "Arrival:", new_node.arrival,
+            #      "Departure:", new_node.departure, "Aircraft:", new_node.aircraft)
+            nodeList.append(new_node)
+
+        return nodeList
 
     # So this is Breadth-First-Search or BFS that will return true if a path exists from the s to t.
     def BFS(self, s, t, parent):
-        visited = [False]*self.ROW
+        visited = [False] * self.ROW
         queue = deque()
         queue.append(s)
         visited[s] = True
@@ -83,7 +162,7 @@ class Graph:
     # Sources for this algorithm are wikipedia, geeksforgeeks, and lessons in class.
     def maximum_Flow(self, source, sink):
         # Parent array will be filled in the BFS and is storing the path.
-        parent = [-1]*self.ROW
+        parent = [-1] * self.ROW
         # max flow initialized to zero
         max_flow = 0
 
@@ -108,16 +187,12 @@ class Graph:
 
         return max_flow
 
+
 if __name__ == '__main__':
     # Notes
     # Date --------------------------
     # January 6th, 2020
-    # Must depart and arrive on above date.
-    # Aircraft Type -----------------
-    # 737 - 165
-    # 32b - 185
-    # 321 - 185
-    #767-300  200
+    # Must depart and arrive on above date within 24 hours.
     # Cities ------------------------
     # LAX-Los Angeles
     # SFO-San Francisco
@@ -133,18 +208,10 @@ if __name__ == '__main__':
     # AA-American
     # DL-Delta
     # UA-United
-    # Hard code data into graph.
-    # Nodes =
-    # Each node represent a time and city
-    graph_ = [[0, 16, 13, 0, 0, 0],
-              [0, 0, 10, 12, 0, 0],
-              [0, 4, 0, 0, 14, 0],
-              [0, 0, 9, 0, 0, 20],
-              [0, 0, 0, 7, 0, 4],
-              [0, 0, 0, 0, 0, 0]]
-    new_graph = Graph.read_input_file()
-    g = Graph(graph_)
+    graphMNG = Graph()
+    test = graphMNG.read_input_file()
     source_ = 0
-    sink_ = 5
-    print("The maximum capacity is", g.maximum_Flow(source_, sink_))
+    sink_ = 654
+
+    # print("The maximum capacity is", g.maximum_Flow(source_, sink_))
     exit(0)
