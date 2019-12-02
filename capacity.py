@@ -9,10 +9,10 @@ from sys import exit
 from collections import deque
 from datetime import time
 
-# Data File
+# Data File - Needs to be changed to location of 450_data.txt
 FILE = '/home/kody/myrepos/cse450/450_data.txt'
 
-# Node
+# Node object
 class Node:
 
     def __init__(self, airline, start, end, departure, arrival, aircraft):
@@ -30,7 +30,8 @@ class Graph:
     def print_flight(flight):
         print("Airline:", flight.airline, "Start:", flight.start, "End:", flight.end, "Departure:", flight.departure, "Arrival:", flight.arrival,  "Aircraft Capacity:", flight.aircraft)
 
-    # Round the times - There is an error in here with times at 12:30 to 12:59 being rounded to 13 ---------------------
+    # Round the times - There is an error in here with times from 12:30 to 12:59 being rounded to 13:00:00
+    # This is also to get all times in a better format then that of the data file.
     @staticmethod
     def round_time(t):
         # convert to datetime.time object
@@ -116,30 +117,53 @@ class Graph:
         f.close()
         return nodeList
 
+    # Compare times, handles am, pm, and 13:00:00 error from datetime
+    @staticmethod
+    def time_comparison(time_a, time_d):
+        print("Time A", time_a[0:2], "Time D", time_d[0:2])
+        print("Time A", time_a, "Time D", time_d)
+        # Convert times to int
+        a_int = int(time_a[0:2])
+        b_int = int(time_d[0:2])
+        return True
+
+    def max_capacity(self, all_flights, validated_flights):
+        max_cap = 0
+        for v_flight in validated_flights:
+            flight_cap = 0
+            for flight in all_flights:
+                if self.time_comparison(flight.arrival, v_flight.departure) is True and flight.end == v_flight.start:
+                    #self.print_flight(flight)
+                    self.print_flight(v_flight)
+        return max_cap
+
+# Notes
+# Date --------------------------
+# January 6th, 2020
+# Must depart and arrive on above date within 24 hours.
+# Cities ------------------------
+# LAX-Los Angeles
+# SFO-San Francisco
+# PHX-Phoenix
+# SEA-Seattle
+# DEN-Denver
+# ATL-Atlanta
+# ORD-Chicago
+# BOS-Boston
+# IAD-Washington DC
+# JFK-New York
+# Airlines ----------------------
+# AA-American
+# DL-Delta
+# UA-United
 
 if __name__ == '__main__':
-    # Notes
-    # Date --------------------------
-    # January 6th, 2020
-    # Must depart and arrive on above date within 24 hours.
-    # Cities ------------------------
-    # LAX-Los Angeles
-    # SFO-San Francisco
-    # PHX-Phoenix
-    # SEA-Seattle
-    # DEN-Denver
-    # ATL-Atlanta
-    # ORD-Chicago
-    # BOS-Boston
-    # IAD-Washington DC
-    # JFK-New York
-    # Airlines ----------------------
-    # AA-American
-    # DL-Delta
-    # UA-United
     graphMNG = Graph()
     # List of flight nodes
     flight_list = graphMNG.read_input_file()
     # List of valid flights (end at JFK)
     valid_flights = graphMNG.valid_flight(flight_list)
+    # Pass all flight list and validated flights to compute maximum capacity
+    capacity = graphMNG.max_capacity(flight_list, valid_flights)
+    print("The maximum capacity is", capacity)
     exit(0)
